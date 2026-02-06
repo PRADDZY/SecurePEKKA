@@ -1,0 +1,55 @@
+const findings = [
+  { title: 'JWT secret entropy below policy', severity: 'HIGH' },
+  { title: 'Open redirect on OAuth callback', severity: 'MEDIUM' },
+  { title: 'Outdated transitive package', severity: 'LOW' }
+];
+
+export default function ProductPanel() {
+  return (
+    <section id="solutions" className="section-wrap pt-0">
+      <div className="mx-auto max-w-6xl px-6">
+        <div className="rounded-[1.35rem] border border-neon/20 bg-panel/70 p-4 shadow-neon md:p-7">
+          <div className="grid gap-6 md:grid-cols-[1fr_1fr]">
+            <div className="rounded-xl2 border border-border bg-[#090d16] p-5">
+              <div className="mb-4 flex gap-2">
+                <span className="h-2.5 w-2.5 rounded-full bg-red-400/80" />
+                <span className="h-2.5 w-2.5 rounded-full bg-yellow-400/80" />
+                <span className="h-2.5 w-2.5 rounded-full bg-green-400/80" />
+              </div>
+              <p className="font-mono text-sm text-slate-300">$ npm install securepekka</p>
+              <p className="mt-3 font-mono text-sm text-neon">+ securepekka@1.4.0</p>
+              <p className="mt-6 text-xs uppercase tracking-[0.16em] text-slate-500">Scan stream</p>
+              <p className="mt-2 font-mono text-xs text-slate-400">Running auth checks...</p>
+              <p className="mt-1 font-mono text-xs text-slate-400">Inspecting API handlers...</p>
+              <p className="mt-1 font-mono text-xs text-slate-400">Assembling remediation report...</p>
+            </div>
+
+            <div className="rounded-xl2 border border-border bg-[#0a1019] p-5">
+              <p className="text-sm font-semibold text-text">Findings</p>
+              <ul className="mt-4 grid gap-3">
+                {findings.map((item) => (
+                  <li key={item.title} className="rounded-lg border border-border/80 bg-panel/80 p-3">
+                    <div className="flex items-center justify-between gap-3">
+                      <span className="text-sm text-slate-200">{item.title}</span>
+                      <span
+                        className={`rounded-full px-2 py-1 text-[10px] font-semibold tracking-wide ${
+                          item.severity === 'HIGH'
+                            ? 'bg-red-500/25 text-red-300'
+                            : item.severity === 'MEDIUM'
+                              ? 'bg-amber-500/25 text-amber-300'
+                              : 'bg-emerald-500/25 text-emerald-300'
+                        }`}
+                      >
+                        {item.severity}
+                      </span>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
