@@ -5,7 +5,7 @@ export default function Hero() {
     <section className="relative pt-32 md:pt-40">
       <div className="mx-auto grid max-w-6xl gap-10 px-6 pb-14 md:grid-cols-[1.05fr_0.95fr] md:pb-20">
         <div className="relative z-10">
-          <p className="eyebrow">SECUREPEKKA • SECURITY FOR STARTUPS</p>
+          <p className="eyebrow">SECUREPEKKA â€¢ SECURITY FOR STARTUPS</p>
           <h1 className="mt-4 font-[var(--font-heading)] text-4xl font-semibold leading-tight text-text md:text-6xl">
             Ship faster, safely - security built for vibecoding teams.
           </h1>
@@ -38,3 +38,4 @@ export default function Hero() {
     </section>
   );
 }
+

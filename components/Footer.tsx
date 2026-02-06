@@ -33,7 +33,7 @@ export default function Footer() {
       </div>
 
       <div className="mx-auto mt-10 flex max-w-6xl flex-wrap items-center justify-between gap-3 border-t border-border/70 px-6 pt-5 text-xs text-slate-500">
-        <span>© {new Date().getFullYear()} SecurePEKKA</span>
+        <span>Â© {new Date().getFullYear()} SecurePEKKA</span>
         <div className="flex gap-4">
           <a href="#">Privacy</a>
           <a href="#">Terms</a>
@@ -43,3 +43,4 @@ export default function Footer() {
     </footer>
   );
 }
+

@@ -45,7 +45,7 @@ export default function Pricing() {
               <p className="mt-3 text-sm leading-6 text-muted">{tier.desc}</p>
               <ul className="mt-5 grid gap-2 text-sm text-slate-300">
                 {tier.points.map((point) => (
-                  <li key={point}>• {point}</li>
+                  <li key={point}>â€¢ {point}</li>
                 ))}
               </ul>
               <button
@@ -65,3 +65,4 @@ export default function Pricing() {
     </section>
   );
 }
+
