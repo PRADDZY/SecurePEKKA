@@ -1,93 +1,54 @@
-'use client';
+const links = ['Home', 'Product', 'Solutions', 'Features', 'Pricing', 'FAQ'];
 
-import { useEffect, useState } from 'react';
+function NavbarPill({ label }: { label: string }) {
+  return (
+    <a
+      href={label === 'Home' ? '#' : `#${label.toLowerCase()}`}
+      className="inline-flex rounded-full px-3 py-1.5 text-xs text-slate-300 transition hover:bg-white/10 hover:text-white"
+    >
+      {label}
+    </a>
+  );
+}
 
-const navLinks = [
-  { label: 'Product', href: '#product' },
-  { label: 'Solutions', href: '#solutions' },
-  { label: 'Docs', href: '#docs' },
-  { label: 'Pricing', href: '#pricing' },
-  { label: 'Company', href: '#company' }
-];
+function ShieldIcon() {
+  return (
+    <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" aria-hidden="true">
+      <path d="M12 3.2L5.4 6v5.7c0 4.3 2.9 7.8 6.6 9.1 3.7-1.3 6.6-4.8 6.6-9.1V6L12 3.2z" stroke="currentColor" strokeWidth="1.4" />
+    </svg>
+  );
+}
+
+function ArrowIcon() {
+  return (
+    <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" aria-hidden="true">
+      <path d="M7 17L17 7M9 7h8v8" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
 
 export default function Navbar() {
-  const [open, setOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 16);
-    onScroll();
-    window.addEventListener('scroll', onScroll);
-    return () => window.removeEventListener('scroll', onScroll);
-  }, []);
-
   return (
-    <header className="fixed inset-x-0 top-0 z-50 p-3 md:p-4">
-      <nav
-        className={`container flex items-center justify-between rounded-full border px-4 py-3 transition-all md:px-6 ${
-          scrolled ? 'border-white/15 bg-[#0a1019]/86 shadow-[0_8px_34px_rgba(0,0,0,0.28)] backdrop-blur-xl' : 'border-transparent bg-transparent'
-        }`}
-      >
-        <a href="#" className="flex items-center gap-2 text-sm font-semibold tracking-wide text-white">
-          <span className="grid h-7 w-7 place-items-center rounded-full border border-[#5ce3c4]/70 text-[11px] text-[#70f5d2]">
-            SP
-          </span>
-          SecurePEKKA
-        </a>
+    <div className="flex flex-wrap items-center justify-between gap-3">
+      <a href="#" className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-[#0f141d]/70 px-3 py-1.5 text-xs font-semibold tracking-[0.08em] text-slate-200">
+        <ShieldIcon />
+        SecurePEKKA
+      </a>
 
-        <ul className="hidden items-center gap-7 text-sm text-slate-300 lg:flex">
-          {navLinks.map((link) => (
-            <li key={link.label}>
-              <a href={link.href} className="transition hover:text-white">
-                {link.label}
-              </a>
+      <nav className="rounded-full border border-white/15 bg-[#101620]/75 px-2 py-1">
+        <ul className="flex flex-wrap items-center gap-1">
+          {links.map((link) => (
+            <li key={link}>
+              <NavbarPill label={link} />
             </li>
           ))}
         </ul>
-
-        <div className="hidden items-center gap-3 lg:flex">
-          <a href="#" className="text-sm text-slate-300 transition hover:text-white">
-            Community
-          </a>
-          <a href="#" className="text-sm text-slate-300 transition hover:text-white">
-            Log in
-          </a>
-          <a href="#" className="btn-primary">
-            Sign up
-          </a>
-        </div>
-
-        <button
-          type="button"
-          onClick={() => setOpen((v) => !v)}
-          className="grid h-9 w-9 place-items-center rounded-full border border-white/20 text-sm text-white lg:hidden"
-          aria-label="Toggle menu"
-        >
-          {open ? 'X' : '||'}
-        </button>
       </nav>
 
-      {open && (
-        <div className="container mt-2 rounded-3xl border border-white/15 bg-[#0a1019]/95 p-5 lg:hidden">
-          <div className="grid gap-3 text-sm">
-            {navLinks.map((link) => (
-              <a key={link.label} href={link.href} className="text-slate-300 hover:text-white">
-                {link.label}
-              </a>
-            ))}
-            <div className="soft-divider my-1" />
-            <a href="#" className="text-slate-300 hover:text-white">
-              Community (Discord)
-            </a>
-            <a href="#" className="text-slate-300 hover:text-white">
-              Log in
-            </a>
-            <a href="#" className="btn-primary mt-1">
-              Sign up
-            </a>
-          </div>
-        </div>
-      )}
-    </header>
+      <a href="#" className="inline-flex items-center gap-2 text-xs font-medium text-slate-200 transition hover:text-white">
+        Create Account
+        <ArrowIcon />
+      </a>
+    </div>
   );
 }

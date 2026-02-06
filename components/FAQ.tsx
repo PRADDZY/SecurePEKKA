@@ -4,56 +4,73 @@ import { useState } from 'react';
 
 const items = [
   {
-    q: 'What do you need from us to begin?',
-    a: 'A staging URL or production endpoint, architecture context, and a contact for clarifications.'
+    q: 'How quickly can SecurePEKKA start?',
+    a: 'Most startup scopes start within 24 to 48 hours after receiving access details.'
   },
   {
-    q: 'Do you work with early-stage products?',
-    a: 'Yes. SecurePEKKA is built for startup teams that need practical, right-sized security.'
+    q: 'Do you include manual pentesting?',
+    a: 'Yes. Automated checks are combined with focused manual testing on critical flows.'
   },
   {
-    q: 'How soon do we get a report?',
-    a: 'Most engagements deliver initial findings within 48-72 hours depending on scope.'
+    q: 'Can we use this before a product launch?',
+    a: 'Yes. The launch package is explicitly designed for pre-release hardening and confidence.'
   },
   {
-    q: 'Can you retest fixes before launch?',
-    a: 'Yes. Launch plan includes one retest round so teams can verify remediation with confidence.'
+    q: 'Do we get fix guidance or just findings?',
+    a: 'Every issue includes remediation guidance with priority and expected effort.'
   },
   {
-    q: 'Are there long-term contracts?',
-    a: 'No long-term contract required. Scope and pricing are set per engagement or monthly advisory.'
+    q: 'Do you support follow-up validation?',
+    a: 'Yes. Launch and Growth include retest rounds for patched findings.'
+  },
+  {
+    q: 'Any long-term contract required?',
+    a: 'No. Plans are engagement-based with optional monthly continuity.'
   }
 ];
+
+function FAQAccordion({
+  q,
+  a,
+  open,
+  onToggle
+}: {
+  q: string;
+  a: string;
+  open: boolean;
+  onToggle: () => void;
+}) {
+  return (
+    <article className="glass-card rounded-2xl">
+      <button className="flex w-full items-center justify-between px-4 py-4 text-left" onClick={onToggle}>
+        <span className="text-sm font-medium text-white">{q}</span>
+        <span className="text-[#97f7df]">{open ? '-' : '+'}</span>
+      </button>
+      {open && <p className="px-4 pb-4 text-sm leading-7 text-slate-400">{a}</p>}
+    </article>
+  );
+}
 
 export default function FAQ() {
   const [active, setActive] = useState<number | null>(0);
 
   return (
-    <section id="docs" className="section pt-0">
+    <section id="faq" className="section pt-1">
       <div className="container max-w-4xl">
-        <p className="eyebrow">FAQ</p>
-        <h2 className="section-title">Straight answers for fast-moving teams.</h2>
-
+        <h2 className="section-title">FAQ</h2>
+        <p className="section-subtitle">Direct answers for engineering teams that ship fast.</p>
         <div className="mt-8 grid gap-3">
-          {items.map((item, i) => {
-            const isOpen = active === i;
-            return (
-              <article key={item.q} className="surface">
-                <button
-                  type="button"
-                  className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left"
-                  onClick={() => setActive(isOpen ? null : i)}
-                >
-                  <span className="text-sm font-medium text-white">{item.q}</span>
-                  <span className="text-[#66f3d2]">{isOpen ? '-' : '+'}</span>
-                </button>
-                {isOpen && <p className="body-muted px-5 pb-5 text-sm">{item.a}</p>}
-              </article>
-            );
-          })}
+          {items.map((item, idx) => (
+            <FAQAccordion
+              key={item.q}
+              q={item.q}
+              a={item.a}
+              open={active === idx}
+              onToggle={() => setActive(active === idx ? null : idx)}
+            />
+          ))}
         </div>
       </div>
     </section>
   );
 }
-
