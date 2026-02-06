@@ -7,94 +7,86 @@ const chips = ['SAST', 'DAST', 'SCA', 'Secrets', 'Cloud', 'Web'];
 
 const steps = [
   {
-    name: 'Scan',
+    id: 'scan',
+    title: 'Scan',
     subtitle: 'Phase 01',
-    description: 'Targeted checks run across auth, API, and deploy surface.',
-    completion: 34,
+    percent: 33,
     eta: '12m',
-    events: ['Enumerating API routes', 'Secret scanners attached', 'Container baseline checks'],
-    checks: ['Endpoint inventory', 'Dependency audit', 'Credential exposure']
+    blurb: 'Discover attack paths across auth, API, and cloud edges.',
+    metrics: { endpoints: 187, findings: 41, confidence: 86 },
+    events: [
+      'Inventory graph built from 187 external routes',
+      'Secret scanner attached to CI artifacts',
+      'Auth boundary checks completed'
+    ]
   },
   {
-    name: 'Review',
+    id: 'review',
+    title: 'Review',
     subtitle: 'Phase 02',
-    description: 'Security team validates exploitability and ranks impact.',
-    completion: 72,
+    percent: 68,
     eta: '7m',
-    events: ['Reproduced billing privilege flaw', 'Validated callback exploit chain', 'Risk scores generated'],
-    checks: ['Exploit verification', 'Business impact mapping', 'Prioritized remediation']
+    blurb: 'Validate exploitability and rank impact by business criticality.',
+    metrics: { endpoints: 187, findings: 17, confidence: 92 },
+    events: [
+      'Privilege escalation chain reproduced',
+      'CVSS and exploitability scoring finalized',
+      'Patch order generated for engineering'
+    ]
   },
   {
-    name: 'Retest',
+    id: 'retest',
+    title: 'Retest',
     subtitle: 'Phase 03',
-    description: 'You patch quickly and get immediate launch confidence.',
-    completion: 93,
+    percent: 94,
     eta: '3m',
-    events: ['Patch set promoted to staging', 'Regression pass complete', 'Launch gate marked green'],
-    checks: ['Patch validation', 'Regression checks', 'Sign-off report']
+    blurb: 'Verify fixes, rerun risk checks, and clear launch gate.',
+    metrics: { endpoints: 187, findings: 3, confidence: 98 },
+    events: [
+      'Regression suite finished on patched build',
+      'High-severity chain no longer reproducible',
+      'Launch gate switched to GREEN'
+    ]
   }
 ];
 
-function clampIndex(index: number) {
-  const total = steps.length;
-  return ((index % total) + total) % total;
+function formatClock(index: number) {
+  const min = 9 + index;
+  return `09:${min.toString().padStart(2, '0')}`;
 }
 
 export default function WorkflowPanel() {
-  const [activeStep, setActiveStep] = useState(0);
-  const [autoPlay, setAutoPlay] = useState(true);
-  const [progress, setProgress] = useState(steps[0].completion);
-  const [eventTick, setEventTick] = useState(0);
-  const [runId, setRunId] = useState(1);
+  const [active, setActive] = useState(0);
+  const [autoplay, setAutoplay] = useState(true);
+  const [tick, setTick] = useState(0);
 
-  const active = steps[activeStep];
+  const step = steps[active];
+  const circumference = 2 * Math.PI * 98;
+  const dashOffset = circumference - (step.percent / 100) * circumference;
 
   useEffect(() => {
-    if (!autoPlay) return;
+    if (!autoplay) return;
     const interval = setInterval(() => {
-      setActiveStep((prev) => clampIndex(prev + 1));
-    }, 4500);
+      setActive((v) => (v + 1) % steps.length);
+    }, 4200);
     return () => clearInterval(interval);
-  }, [autoPlay]);
+  }, [autoplay]);
 
   useEffect(() => {
-    const target = active.completion;
-    let frame: ReturnType<typeof setInterval> | undefined;
-    frame = setInterval(() => {
-      setProgress((prev) => {
-        const delta = target - prev;
-        if (Math.abs(delta) < 1) {
-          if (frame) clearInterval(frame);
-          return target;
-        }
-        return prev + Math.sign(delta) * Math.max(1, Math.abs(delta) * 0.2);
-      });
-    }, 22);
-    return () => frame && clearInterval(frame);
-  }, [active.completion]);
-
-  useEffect(() => {
-    const ticker = setInterval(() => {
-      setEventTick((v) => (v + 1) % 3);
-    }, 1400);
-    return () => clearInterval(ticker);
+    const interval = setInterval(() => {
+      setTick((v) => (v + 1) % 3);
+    }, 1250);
+    return () => clearInterval(interval);
   }, []);
 
-  const ringStyle = useMemo(() => {
-    const degrees = (progress / 100) * 360;
-    return {
-      background: `conic-gradient(#64f3cf ${degrees}deg, rgba(255,255,255,0.08) ${degrees}deg 360deg)`
-    };
-  }, [progress]);
-
-  const runSimulation = () => {
-    setRunId((id) => id + 1);
-    setAutoPlay(false);
-    setActiveStep(0);
-
-    window.setTimeout(() => setActiveStep(1), 900);
-    window.setTimeout(() => setActiveStep(2), 1800);
-  };
+  const eventRows = useMemo(
+    () =>
+      step.events.map((event, i) => ({
+        event,
+        done: i <= tick
+      })),
+    [step.events, tick]
+  );
 
   return (
     <section id="solutions" className="section pt-3">
@@ -103,129 +95,160 @@ export default function WorkflowPanel() {
           <span id="features" className="sr-only">
             Features
           </span>
-          <div className="flex flex-wrap items-center justify-between gap-3">
+
+          <div className="flex flex-wrap items-end justify-between gap-4">
             <div>
               <h2 className="section-title">Launch-ready in 3 steps</h2>
-              <p className="section-subtitle">Real-time demo mode with controls, live activity, and workflow state transitions.</p>
+              <p className="section-subtitle">
+                Interactive demo timeline with live status simulation.
+              </p>
             </div>
 
             <div className="flex items-center gap-2">
               <button
                 type="button"
-                onClick={() => setActiveStep((p) => clampIndex(p - 1))}
+                onClick={() => setActive((v) => (v + steps.length - 1) % steps.length)}
                 className="rounded-full border border-white/15 bg-white/[0.04] px-3 py-1.5 text-xs text-slate-200 hover:bg-white/[0.08]"
               >
-                Prev
+                Previous
               </button>
               <button
                 type="button"
-                onClick={() => setActiveStep((p) => clampIndex(p + 1))}
+                onClick={() => setActive((v) => (v + 1) % steps.length)}
                 className="rounded-full border border-white/15 bg-white/[0.04] px-3 py-1.5 text-xs text-slate-200 hover:bg-white/[0.08]"
               >
                 Next
               </button>
               <button
                 type="button"
-                onClick={() => setAutoPlay((v) => !v)}
+                onClick={() => setAutoplay((v) => !v)}
                 className={`rounded-full border px-3 py-1.5 text-xs ${
-                  autoPlay ? 'border-[#64f3cf]/55 bg-[#64f3cf]/15 text-[#9ff7e0]' : 'border-white/15 bg-white/[0.04] text-slate-200'
+                  autoplay
+                    ? 'border-[#64f3cf]/55 bg-[#64f3cf]/15 text-[#9ff7e0]'
+                    : 'border-white/15 bg-white/[0.04] text-slate-200'
                 }`}
               >
-                {autoPlay ? 'Autoplay On' : 'Autoplay Off'}
-              </button>
-              <button
-                type="button"
-                onClick={runSimulation}
-                className="rounded-full border border-[#64f3cf]/50 bg-[#101d26] px-3 py-1.5 text-xs text-[#9ff7e0] hover:bg-[#132331]"
-              >
-                Run Simulation
+                {autoplay ? 'Autoplay On' : 'Autoplay Off'}
               </button>
             </div>
           </div>
 
-          <div className="mt-9 grid items-start gap-6 md:grid-cols-[0.95fr_1.05fr]">
-            <div className="grid gap-3">
-              {steps.map((step, idx) => {
-                const selected = idx === activeStep;
-                return (
-                  <button
-                    type="button"
-                    key={step.name}
-                    onClick={() => {
-                      setAutoPlay(false);
-                      setActiveStep(idx);
-                    }}
-                    className={`glass-card rounded-2xl px-4 py-3 text-left transition ${
-                      selected ? 'border-[#64f3cf]/45 bg-[#111e2a]/70 shadow-[0_10px_30px_rgba(0,0,0,0.28)]' : ''
-                    }`}
-                  >
-                    <p className="text-xs uppercase tracking-[0.14em] text-slate-500">{step.subtitle}</p>
-                    <div className="mt-1 flex items-center justify-between">
-                      <p className="text-base font-semibold text-white">{step.name}</p>
-                      <span className="text-xs text-slate-400">{step.eta}</span>
-                    </div>
-                    <p className="mt-1 text-xs text-slate-400">{step.description}</p>
-                    <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-white/10">
-                      <div className="h-full rounded-full bg-[#64f3cf] transition-all duration-500" style={{ width: `${step.completion}%` }} />
-                    </div>
-                  </button>
-                );
-              })}
+          <div className="mt-8 grid gap-5 md:grid-cols-[0.9fr_1.1fr]">
+            <div className="glass-card rounded-3xl p-4">
+              <p className="text-xs uppercase tracking-[0.14em] text-slate-500">Workflow Timeline</p>
+              <div className="mt-4 grid gap-2">
+                {steps.map((item, index) => {
+                  const selected = active === index;
+                  return (
+                    <button
+                      key={item.id}
+                      type="button"
+                      onClick={() => {
+                        setAutoplay(false);
+                        setActive(index);
+                      }}
+                      className={`rounded-2xl border px-4 py-3 text-left transition ${
+                        selected
+                          ? 'border-[#64f3cf]/45 bg-[#11212a]'
+                          : 'border-white/10 bg-black/20 hover:border-white/20'
+                      }`}
+                    >
+                      <div className="flex items-center justify-between">
+                        <p className="text-xs uppercase tracking-[0.13em] text-slate-500">{item.subtitle}</p>
+                        <p className="text-xs text-slate-400">{item.eta}</p>
+                      </div>
+                      <p className="mt-1 text-base font-semibold text-white">{item.title}</p>
+                      <p className="mt-1 text-xs leading-5 text-slate-400">{item.blurb}</p>
+                      <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-white/10">
+                        <div
+                          className="h-full rounded-full bg-[#64f3cf] transition-all duration-500"
+                          style={{ width: `${item.percent}%` }}
+                        />
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
             </div>
 
             <div className="grid gap-4">
-              <div className="relative mx-auto grid h-[320px] w-[320px] place-items-center rounded-full border border-white/10 bg-black/20">
-                <div className="absolute inset-3 rounded-full p-[10px] transition-all duration-300" style={ringStyle}>
-                  <div className="h-full w-full rounded-full bg-[#0f1722]" />
-                </div>
-                <div className="absolute inset-[28%] grid place-items-center rounded-full border border-white/10 bg-[#0f1722]/95">
-                  <p className="text-[11px] uppercase tracking-[0.2em] text-slate-400">Step 0{activeStep + 1}</p>
-                  <p className="mt-2 text-2xl font-semibold text-white">{active.name}</p>
-                  <p className="mt-1 text-xs text-slate-400">{Math.round(progress)}% complete</p>
+              <div className="glass-card rounded-3xl p-5">
+                <p className="text-xs uppercase tracking-[0.14em] text-slate-500">Simulator Status</p>
+                <div className="mt-4 grid items-center gap-3 sm:grid-cols-[240px_1fr]">
+                  <div className="relative mx-auto h-[240px] w-[240px]">
+                    <svg viewBox="0 0 240 240" className="h-full w-full -rotate-90">
+                      <circle cx="120" cy="120" r="98" stroke="rgba(255,255,255,0.12)" strokeWidth="14" fill="none" />
+                      <circle
+                        cx="120"
+                        cy="120"
+                        r="98"
+                        stroke="#64f3cf"
+                        strokeWidth="14"
+                        fill="none"
+                        strokeLinecap="round"
+                        strokeDasharray={circumference}
+                        strokeDashoffset={dashOffset}
+                        className="transition-all duration-700"
+                      />
+                    </svg>
+                    <div className="absolute inset-0 grid place-items-center">
+                      <div className="text-center">
+                        <p className="text-[11px] uppercase tracking-[0.2em] text-slate-400">
+                          {step.subtitle}
+                        </p>
+                        <p className="mt-2 text-3xl font-semibold text-white">{step.title}</p>
+                        <p className="mt-1 text-sm text-[#9ff7e0]">{step.percent}% complete</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="grid gap-2">
+                    <div className="rounded-xl border border-white/10 bg-black/20 p-3">
+                      <p className="text-[10px] uppercase tracking-[0.12em] text-slate-500">Findings Remaining</p>
+                      <p className="mt-1 text-2xl font-semibold text-white">{step.metrics.findings}</p>
+                    </div>
+                    <div className="rounded-xl border border-white/10 bg-black/20 p-3">
+                      <p className="text-[10px] uppercase tracking-[0.12em] text-slate-500">Coverage Confidence</p>
+                      <p className="mt-1 text-2xl font-semibold text-white">{step.metrics.confidence}%</p>
+                    </div>
+                    <div className="rounded-xl border border-white/10 bg-black/20 p-3">
+                      <p className="text-[10px] uppercase tracking-[0.12em] text-slate-500">Endpoints Tracked</p>
+                      <p className="mt-1 text-2xl font-semibold text-white">{step.metrics.endpoints}</p>
+                    </div>
+                  </div>
                 </div>
               </div>
 
-              <div className="glass-card rounded-2xl p-4">
-                <div className="flex items-center justify-between">
-                  <p className="text-xs uppercase tracking-[0.12em] text-slate-500">Live Activity Feed</p>
-                  <p className="text-[10px] text-slate-500">run #{runId}</p>
-                </div>
-                <ul className="mt-3 grid gap-2 text-xs text-slate-300">
-                  {active.events.map((event, idx) => (
+              <div className="glass-card rounded-3xl p-4">
+                <p className="text-xs uppercase tracking-[0.14em] text-slate-500">Live Event Stream</p>
+                <ul className="mt-3 grid gap-2 text-xs">
+                  {eventRows.map((row, i) => (
                     <li
-                      key={`${event}-${runId}`}
-                      className={`flex items-center gap-2 rounded-lg border px-2.5 py-2 transition ${
-                        idx <= eventTick
-                          ? 'border-[#64f3cf]/30 bg-[#0f1f1b] text-[#b9fdea]'
+                      key={`${step.id}-${row.event}`}
+                      className={`flex items-center justify-between rounded-lg border px-3 py-2 transition ${
+                        row.done
+                          ? 'border-[#64f3cf]/35 bg-[#10221f] text-[#b4fce8]'
                           : 'border-white/10 bg-black/20 text-slate-300'
                       }`}
                     >
-                      <span className={`h-1.5 w-1.5 rounded-full ${idx <= eventTick ? 'bg-[#64f3cf]' : 'bg-slate-500'}`} />
-                      {event}
+                      <span className="flex items-center gap-2">
+                        <span className={`h-1.5 w-1.5 rounded-full ${row.done ? 'bg-[#64f3cf]' : 'bg-slate-500'}`} />
+                        {row.event}
+                      </span>
+                      <span className="text-[10px] text-slate-500">{formatClock(i)}</span>
                     </li>
                   ))}
                 </ul>
-                <div className="mt-3 grid grid-cols-3 gap-2">
-                  {active.checks.map((check, idx) => (
-                    <div
-                      key={`${check}-${runId}`}
-                      className={`rounded-md border px-2 py-1.5 text-[10px] ${
-                        idx <= eventTick
-                          ? 'border-[#64f3cf]/35 bg-[#64f3cf]/10 text-[#a8f9e2]'
-                          : 'border-white/10 bg-black/20 text-slate-400'
-                      }`}
-                    >
-                      {check}
-                    </div>
-                  ))}
-                </div>
               </div>
             </div>
           </div>
 
           <div className="mt-8 flex flex-wrap gap-2">
             {chips.map((chip) => (
-              <span key={chip} className="rounded-full border border-white/15 bg-white/[0.03] px-3 py-1.5 text-xs text-slate-300">
+              <span
+                key={chip}
+                className="rounded-full border border-white/15 bg-white/[0.03] px-3 py-1.5 text-xs text-slate-300"
+              >
                 {chip}
               </span>
             ))}
