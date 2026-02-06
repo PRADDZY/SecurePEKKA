@@ -46,6 +46,7 @@ body::before {
 .page-shell {
   position: relative;
   overflow: clip;
+  isolation: isolate;
 }
 
 .page-shell::after {
