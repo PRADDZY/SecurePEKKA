@@ -128,6 +128,32 @@ body::before {
   opacity: 0.92;
 }
 
+@keyframes ribbon {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.trust-ribbon {
+  position: relative;
+  overflow: hidden;
+  mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+}
+
+.trust-track {
+  display: flex;
+  gap: 0.55rem;
+  width: max-content;
+  animation: ribbon 24s linear infinite;
+}
+
+.trust-ribbon:hover .trust-track {
+  animation-play-state: paused;
+}
+
 @keyframes reveal {
   from {
     opacity: 0;
