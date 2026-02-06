@@ -1,15 +1,17 @@
 import type { Metadata } from 'next';
-import { Outfit, Instrument_Sans } from 'next/font/google';
+import { Bricolage_Grotesque, Manrope } from 'next/font/google';
 import './globals.css';
 
-const outfit = Outfit({
+const bricolage = Bricolage_Grotesque({
   subsets: ['latin'],
-  variable: '--font-heading'
+  variable: '--font-heading',
+  display: 'swap'
 });
 
-const instrumentSans = Instrument_Sans({
+const manrope = Manrope({
   subsets: ['latin'],
-  variable: '--font-body'
+  variable: '--font-body',
+  display: 'swap'
 });
 
 export const metadata: Metadata = {
@@ -25,7 +27,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${outfit.variable} ${instrumentSans.variable}`}>{children}</body>
+      <body className={`${bricolage.variable} ${manrope.variable}`}>{children}</body>
     </html>
   );
 }

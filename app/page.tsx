@@ -24,27 +24,26 @@ const steps = [
 
 export default function Home() {
   return (
-    <main className="relative overflow-hidden">
+    <main className="site-shell">
       <Navbar />
       <Hero />
       <LogoRow />
       <Features />
       <ProductPanel />
 
-      <section id="how" className="section-wrap">
-        <div className="mx-auto max-w-6xl px-6">
+      <section id="how" className="section">
+        <div className="container">
           <p className="eyebrow">HOW IT WORKS</p>
           <h2 className="section-title">Fast security loops for startup velocity.</h2>
-          <div className="mt-10 grid gap-5 md:grid-cols-3">
+          <div className="mt-10 grid gap-4 md:grid-cols-3">
             {steps.map((step, i) => (
               <article
                 key={step.title}
-                className="rounded-xl2 border border-border/80 bg-panel/65 p-6 animate-floatUp"
-                style={{ animationDelay: `${i * 120}ms` }}
+                className="surface p-6 transition-transform duration-200 hover:-translate-y-1"
               >
-                <div className="text-sm font-semibold text-neon">0{i + 1}</div>
-                <h3 className="mt-3 text-lg font-semibold text-text">{step.title}</h3>
-                <p className="mt-3 text-sm leading-6 text-muted">{step.body}</p>
+                <div className="text-xs font-semibold tracking-[0.18em] text-[#6fdcc0]">STEP 0{i + 1}</div>
+                <h3 className="mt-3 text-lg font-semibold text-white">{step.title}</h3>
+                <p className="body-muted mt-3 text-sm">{step.body}</p>
               </article>
             ))}
           </div>

@@ -2,13 +2,13 @@ const logos = ['PROTOCOIL', 'STACKNOVA', 'LUMENPAY', 'AEROBYTE', 'MINTCAST', 'ZE
 
 export default function LogoRow() {
   return (
-    <section className="section-wrap pt-4">
-      <div className="mx-auto max-w-6xl px-6">
-        <div className="grid grid-cols-2 gap-3 rounded-xl2 border border-border/60 bg-panel/25 p-6 md:grid-cols-6">
+    <section className="section pt-2">
+      <div className="container">
+        <div className="surface grid grid-cols-2 gap-2 p-3 md:grid-cols-6">
           {logos.map((logo) => (
             <div
               key={logo}
-              className="text-center text-xs font-semibold tracking-[0.16em] text-slate-500 opacity-75"
+              className="rounded-2xl border border-white/5 py-4 text-center text-[11px] font-semibold tracking-[0.18em] text-slate-500"
             >
               {logo}
             </div>

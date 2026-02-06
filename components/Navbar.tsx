@@ -2,7 +2,13 @@
 
 import { useEffect, useState } from 'react';
 
-const navLinks = ['Product', 'Solutions', 'Docs', 'Pricing', 'Company'];
+const navLinks = [
+  { label: 'Product', href: '#product' },
+  { label: 'Solutions', href: '#solutions' },
+  { label: 'Docs', href: '#docs' },
+  { label: 'Pricing', href: '#pricing' },
+  { label: 'Company', href: '#company' }
+];
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
@@ -16,42 +22,37 @@ export default function Navbar() {
   }, []);
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50 px-4 pt-4 md:px-6">
+    <header className="fixed inset-x-0 top-0 z-50 p-3 md:p-4">
       <nav
-        className={`mx-auto flex max-w-6xl items-center justify-between rounded-full border px-4 py-3 transition-all md:px-6 ${
-          scrolled
-            ? 'border-border/70 bg-panel/85 backdrop-blur-md'
-            : 'border-transparent bg-transparent'
+        className={`container flex items-center justify-between rounded-full border px-4 py-3 transition-all md:px-6 ${
+          scrolled ? 'border-white/15 bg-[#0a1019]/86 shadow-[0_8px_34px_rgba(0,0,0,0.28)] backdrop-blur-xl' : 'border-transparent bg-transparent'
         }`}
       >
-        <a href="#" className="flex items-center gap-2 text-sm font-semibold">
-          <span className="grid h-7 w-7 place-items-center rounded-full border border-neon/70 text-neon">
-            S
+        <a href="#" className="flex items-center gap-2 text-sm font-semibold tracking-wide text-white">
+          <span className="grid h-7 w-7 place-items-center rounded-full border border-[#5ce3c4]/70 text-[11px] text-[#70f5d2]">
+            SP
           </span>
           SecurePEKKA
         </a>
 
-        <ul className="hidden items-center gap-6 text-sm text-muted lg:flex">
+        <ul className="hidden items-center gap-7 text-sm text-slate-300 lg:flex">
           {navLinks.map((link) => (
-            <li key={link}>
-              <a href={`#${link.toLowerCase()}`} className="transition hover:text-text">
-                {link}
+            <li key={link.label}>
+              <a href={link.href} className="transition hover:text-white">
+                {link.label}
               </a>
             </li>
           ))}
         </ul>
 
         <div className="hidden items-center gap-3 lg:flex">
-          <a href="#" className="text-sm text-muted transition hover:text-text">
+          <a href="#" className="text-sm text-slate-300 transition hover:text-white">
             Community
           </a>
-          <a href="#" className="text-sm text-muted transition hover:text-text">
+          <a href="#" className="text-sm text-slate-300 transition hover:text-white">
             Log in
           </a>
-          <a
-            href="#"
-            className="rounded-full bg-neon px-4 py-2 text-sm font-semibold text-[#03241d] transition hover:opacity-90"
-          >
+          <a href="#" className="btn-primary">
             Sign up
           </a>
         </div>
@@ -59,32 +60,29 @@ export default function Navbar() {
         <button
           type="button"
           onClick={() => setOpen((v) => !v)}
-          className="grid h-9 w-9 place-items-center rounded-full border border-border lg:hidden"
+          className="grid h-9 w-9 place-items-center rounded-full border border-white/20 text-sm text-white lg:hidden"
           aria-label="Toggle menu"
         >
-          <span className="h-px w-4 bg-text" />
+          {open ? 'X' : '||'}
         </button>
       </nav>
 
       {open && (
-        <div className="mx-auto mt-2 max-w-6xl rounded-2xl border border-border bg-panel/95 p-4 lg:hidden">
+        <div className="container mt-2 rounded-3xl border border-white/15 bg-[#0a1019]/95 p-5 lg:hidden">
           <div className="grid gap-3 text-sm">
             {navLinks.map((link) => (
-              <a key={link} href={`#${link.toLowerCase()}`} className="text-muted hover:text-text">
-                {link}
+              <a key={link.label} href={link.href} className="text-slate-300 hover:text-white">
+                {link.label}
               </a>
             ))}
-            <hr className="border-border" />
-            <a href="#" className="text-muted hover:text-text">
+            <div className="soft-divider my-1" />
+            <a href="#" className="text-slate-300 hover:text-white">
               Community (Discord)
             </a>
-            <a href="#" className="text-muted hover:text-text">
+            <a href="#" className="text-slate-300 hover:text-white">
               Log in
             </a>
-            <a
-              href="#"
-              className="rounded-full bg-neon px-4 py-2 text-center font-semibold text-[#03241d]"
-            >
+            <a href="#" className="btn-primary mt-1">
               Sign up
             </a>
           </div>
@@ -93,4 +91,3 @@ export default function Navbar() {
     </header>
   );
 }
-

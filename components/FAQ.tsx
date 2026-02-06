@@ -29,8 +29,8 @@ export default function FAQ() {
   const [active, setActive] = useState<number | null>(0);
 
   return (
-    <section id="docs" className="section-wrap pt-0">
-      <div className="mx-auto max-w-4xl px-6">
+    <section id="docs" className="section pt-0">
+      <div className="container max-w-4xl">
         <p className="eyebrow">FAQ</p>
         <h2 className="section-title">Straight answers for fast-moving teams.</h2>
 
@@ -38,16 +38,16 @@ export default function FAQ() {
           {items.map((item, i) => {
             const isOpen = active === i;
             return (
-              <article key={item.q} className="rounded-xl2 border border-border/80 bg-panel/60">
+              <article key={item.q} className="surface">
                 <button
                   type="button"
                   className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left"
                   onClick={() => setActive(isOpen ? null : i)}
                 >
-                  <span className="text-sm font-medium text-text">{item.q}</span>
-                  <span className="text-neon">{isOpen ? '-' : '+'}</span>
+                  <span className="text-sm font-medium text-white">{item.q}</span>
+                  <span className="text-[#66f3d2]">{isOpen ? '-' : '+'}</span>
                 </button>
-                {isOpen && <p className="px-5 pb-5 text-sm leading-6 text-muted">{item.a}</p>}
+                {isOpen && <p className="body-muted px-5 pb-5 text-sm">{item.a}</p>}
               </article>
             );
           })}
